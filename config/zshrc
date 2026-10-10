@@ -1,0 +1,41 @@
+# Personal prompt imported from the current machine.
+export PATH="$HOME/.local/bin:$PATH"
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt APPEND_HISTORY HIST_IGNORE_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
+
+autoload -Uz compinit
+compinit -i
+bindkey '^P' history-search-backward
+bindkey '^N' history-search-forward
+
+for dev_bootstrap_prefix in /opt/homebrew /usr/local; do
+  if [[ -r "$dev_bootstrap_prefix/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+    source "$dev_bootstrap_prefix/share/powerlevel10k/powerlevel10k.zsh-theme"
+    break
+  fi
+done
+unset dev_bootstrap_prefix
+
+[[ -r "$HOME/.config/dev-bootstrap/p10k.zsh" ]] && source "$HOME/.config/dev-bootstrap/p10k.zsh"
+
+for dev_bootstrap_prefix in /opt/homebrew /usr/local; do
+  if [[ -r "$dev_bootstrap_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+    source "$dev_bootstrap_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    break
+  fi
+done
+unset dev_bootstrap_prefix
+
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+alias ll='ls -lah'
+alias la='ls -A'
+alias ..='cd ..'
